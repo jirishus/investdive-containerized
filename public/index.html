@@ -3,60 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <title>Cashflow Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-[#0c1020] text-white min-h-screen p-6">
+<body class="bg-[#0c1020] text-white min-h-screen">
 
-  <div class="flex items-center justify-between mb-6">
-  <h1 class="text-3xl font-bold">💰 Cashflow Dashboard</h1>
-  <label class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer">
-    Upload CSV
-    <input type="file" id="csvInput" accept=".csv" class="hidden" />
-  </label>
-</div>
+  <!-- Header + Mobile Menu -->
+  <header class="bg-[#0c1020] p-4 border-b border-white/10">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">💰 Cashflow Dashboard</h1>
+      <button id="menuToggle" class="sm:hidden text-white text-xl">&#9776;</button>
+      <nav class="hidden sm:flex gap-4 items-center" id="navLinks">
+        <label class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer">
+          Upload CSV
+          <input type="file" id="csvInput" accept=".csv" class="hidden" />
+        </label>
+      </nav>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="sm:hidden hidden mt-2 px-4">
+      <label class="block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer w-full text-center">
+        Upload CSV
+        <input type="file" id="csvInputMobile" accept=".csv" class="hidden" />
+      </label>
+    </div>
+  </header>
 
+  <!-- Dashboard Grid -->
+  <main class="p-6 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-    <!-- Cash in Bank -->
+    <!-- Card: Cash in Bank -->
     <div class="bg-[#161c36] rounded-xl p-4">
-      <h2 class="text-xl font-semibold mb-2">Cash in Bank</h2>
-      <p class="text-3xl font-bold text-blue-300 mb-2">$616.5K <span class="text-sm text-white/50">Current</span></p>
-      <canvas id="cashChart" class="w-full max-h-48"></canvas>
+      <h2 class="text-lg sm:text-xl font-semibold mb-2">Cash in Bank</h2>
+      <p class="text-2xl sm:text-3xl font-bold text-blue-300 mb-2">$616.5K <span class="text-sm text-white/50">Current</span></p>
+      <canvas id="cashChart" class="w-full aspect-[4/3] max-h-[250px]"></canvas>
     </div>
 
-    <!-- Burn Rate -->
+    <!-- Card: Burn -->
     <div class="bg-[#161c36] rounded-xl p-4">
-      <h2 class="text-xl font-semibold mb-2">Burn</h2>
-      <p class="text-3xl font-bold text-pink-300 mb-2">$63.9K <span class="text-sm text-white/50">6 month avg</span></p>
-      <canvas id="burnChart" class="w-full max-h-48"></canvas>
+      <h2 class="text-lg sm:text-xl font-semibold mb-2">Burn</h2>
+      <p class="text-2xl sm:text-3xl font-bold text-pink-300 mb-2">$63.9K <span class="text-sm text-white/50">6 month avg</span></p>
+      <canvas id="burnChart" class="w-full aspect-[4/3] max-h-[250px]"></canvas>
     </div>
 
-    <!-- Expenses -->
+    <!-- Card: Expenses -->
     <div class="bg-[#161c36] rounded-xl p-4">
-      <h2 class="text-xl font-semibold mb-2">Expenses</h2>
-      <canvas id="expensesChart" class="w-full max-h-56"></canvas>
+      <h2 class="text-lg sm:text-xl font-semibold mb-2">Expenses</h2>
+      <canvas id="expensesChart" class="w-full aspect-[4/3] max-h-[300px]"></canvas>
     </div>
 
-    <!-- Solvency + Income/Outgoings -->
-    <div class="bg-[#161c36] rounded-xl p-4 col-span-1 md:col-span-2 lg:col-span-1">
-      <h2 class="text-xl font-semibold mb-2">Solvency</h2>
-      <p class="text-4xl font-bold text-green-400 mb-4">10.8 <span class="text-sm">mth Runway ✅</span></p>
-      <canvas id="incomeChart" class="w-full max-h-48"></canvas>
+    <!-- Card: Solvency -->
+    <div class="bg-[#161c36] rounded-xl p-4 col-span-1 sm:col-span-2 lg:col-span-1">
+      <h2 class="text-lg sm:text-xl font-semibold mb-2">Solvency</h2>
+      <p class="text-3xl sm:text-4xl font-bold text-green-400 mb-4">10.8 <span class="text-sm">mth Runway ✅</span></p>
+      <canvas id="incomeChart" class="w-full aspect-[4/3] max-h-[250px]"></canvas>
     </div>
 
-    <!-- Debtors -->
+    <!-- Card: Debtors -->
     <div class="bg-[#161c36] rounded-xl p-4">
-      <h2 class="text-xl font-semibold mb-2">Debtors</h2>
-      <p class="text-2xl font-bold text-blue-300 mb-1">$345K <span class="text-sm text-white/50">Total</span></p>
-      <p class="text-xl text-red-400">⚠️ $125K over 45 days</p>
-      <canvas id="debtorsChart" class="w-full max-h-40 mt-4"></canvas>
+      <h2 class="text-lg sm:text-xl font-semibold mb-2">Debtors</h2>
+      <p class="text-xl sm:text-2xl font-bold text-blue-300 mb-1">$345K <span class="text-sm text-white/50">Total</span></p>
+      <p class="text-lg text-red-400">⚠️ $125K over 45 days</p>
+      <canvas id="debtorsChart" class="w-full aspect-[4/3] max-h-[200px] mt-4"></canvas>
     </div>
 
-    <!-- Exchange Rates -->
+    <!-- Card: Currency Rates -->
     <div class="bg-[#161c36] rounded-xl p-4">
-      <h2 class="text-xl font-semibold mb-4">USD Exchange Rates</h2>
+      <h2 class="text-lg sm:text-xl font-semibold mb-4">USD Exchange Rates</h2>
       <ul class="space-y-2 text-lg">
         <li><span class="font-bold text-white">0.89</span> <span class="text-white/60">EUR</span></li>
         <li><span class="font-bold text-white">0.75</span> <span class="text-white/60">GBP</span></li>
@@ -64,9 +78,16 @@
       </ul>
     </div>
 
-  </div>
+  </main>
 
   <script>
+    // Mobile menu toggle
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Chart data
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
     new Chart(document.getElementById('cashChart'), {
@@ -76,7 +97,7 @@
         datasets: [{
           label: 'Cash',
           data: [900000, 880000, 700000, 650000, 630000, 600000],
-          backgroundColor: 'rgb(56, 189, 248)',
+          backgroundColor: 'rgb(56, 189, 248)'
         }]
       },
       options: { responsive: true, plugins: { legend: { display: false } } }
@@ -162,6 +183,5 @@
       options: { responsive: true, plugins: { legend: { display: false } } }
     });
   </script>
-
 </body>
 </html>

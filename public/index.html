@@ -1,187 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Cashflow Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CashOptics - Financial Clarity for Founders</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-[#0c1020] text-white min-h-screen">
+<body class="bg-[#f4f6fa] text-gray-900 font-sans">
 
-  <!-- Header + Mobile Menu -->
-  <header class="bg-[#0c1020] p-4 border-b border-white/10">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <h1 class="text-2xl font-bold">💰 Cashflow Dashboard</h1>
-      <button id="menuToggle" class="sm:hidden text-white text-xl">&#9776;</button>
-      <nav class="hidden sm:flex gap-4 items-center" id="navLinks">
-        <label class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer">
-          Upload CSV
-          <input type="file" id="csvInput" accept=".csv" class="hidden" />
-        </label>
-      </nav>
+  <!-- Hero Section -->
+  <section class="bg-white py-16 px-6 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12">
+      <div class="md:w-1/2 text-center md:text-left">
+        <h1 class="text-4xl font-bold leading-tight mb-4 text-blue-700">Manage your finances with <span class="text-blue-500">CashOptics</span></h1>
+        <p class="text-gray-600 mb-6 text-lg">Track your spending, upload CSVs, and visualize your finances with ease and clarity.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+          <a href="#dashboard" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded font-medium">Launch Live Demo</a>
+          <a href="#" class="border border-gray-300 text-gray-700 px-6 py-3 rounded font-medium">Download App</a>
+        </div>
+        <div class="flex items-center gap-4 mt-6 justify-center md:justify-start">
+          <img src="https://img.icons8.com/ios-filled/50/000000/apple-logo.png" class="h-6" alt="App Store"/>
+          <img src="https://img.icons8.com/ios-filled/50/000000/google-play.png" class="h-6" alt="Google Play"/>
+          <span class="text-sm text-gray-500">Available on iOS & Android</span>
+        </div>
+      </div>
+      <div class="md:w-1/2">
+        <div class="bg-blue-50 rounded-xl p-6 shadow-lg">
+          <h2 class="text-xl font-semibold text-blue-700 mb-4">Overview</h2>
+          <ul class="grid grid-cols-2 gap-4 text-sm text-gray-700">
+            <li class="bg-white p-3 rounded shadow text-center">
+              <div class="text-lg font-bold text-blue-600">$710.00</div>
+              <div>Total Expenses</div>
+            </li>
+            <li class="bg-white p-3 rounded shadow text-center">
+              <div class="text-lg font-bold text-blue-600">$23.67</div>
+              <div>Daily Avg</div>
+            </li>
+            <li class="bg-white p-3 rounded shadow text-center col-span-2">
+              <div class="text-lg font-bold text-blue-600">7</div>
+              <div>Categories</div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="sm:hidden hidden mt-2 px-4">
-      <label class="block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer w-full text-center">
+  </section>
+
+  <!-- Dashboard Section -->
+  <section id="dashboard" class="py-20 px-6">
+    <div class="max-w-6xl mx-auto text-center mb-10">
+      <h2 class="text-3xl font-bold text-blue-700 mb-2">Expense Overview</h2>
+      <p class="text-gray-600 mb-4">Upload a CSV or enter your own data to see where your money goes.</p>
+      <label class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded font-medium cursor-pointer inline-block">
         Upload CSV
-        <input type="file" id="csvInputMobile" accept=".csv" class="hidden" />
+        <input type="file" id="csvInput" accept=".csv" class="hidden" />
       </label>
     </div>
-  </header>
 
-  <!-- Dashboard Grid -->
-  <main class="p-6 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-    <!-- Card: Cash in Bank -->
-    <div class="bg-[#161c36] rounded-xl p-4">
-      <h2 class="text-lg sm:text-xl font-semibold mb-2">Cash in Bank</h2>
-      <p class="text-2xl sm:text-3xl font-bold text-blue-300 mb-2">$616.5K <span class="text-sm text-white/50">Current</span></p>
-      <canvas id="cashChart" class="w-full aspect-[4/3] max-h-[250px]"></canvas>
+    <div class="bg-white p-6 rounded-lg shadow grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="text-left">
+        <h3 class="text-xl font-semibold text-blue-600 mb-4">Add New Expense</h3>
+        <form class="grid gap-4">
+          <input type="text" placeholder="Description" class="border border-gray-300 p-2 rounded w-full">
+          <div class="grid grid-cols-2 gap-4">
+            <input type="number" step="0.01" placeholder="Amount ($)" class="border border-gray-300 p-2 rounded w-full">
+            <input type="date" class="border border-gray-300 p-2 rounded w-full">
+          </div>
+          <select class="border border-gray-300 p-2 rounded w-full">
+            <option>Food</option>
+            <option>Transport</option>
+            <option>Entertainment</option>
+            <option>Utilities</option>
+            <option>Shopping</option>
+            <option>Healthcare</option>
+            <option>Other</option>
+          </select>
+          <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">➕ Add Expense</button>
+        </form>
+      </div>
+      <div>
+        <h3 class="text-xl font-semibold text-blue-600 mb-4">Spending Breakdown</h3>
+        <canvas id="expensesChart" class="w-full aspect-[4/3]"></canvas>
+        <div class="flex justify-center mt-4 gap-4">
+          <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm">Pie</button>
+          <button class="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm">Bar</button>
+          <button class="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm">Trend</button>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <!-- Card: Burn -->
-    <div class="bg-[#161c36] rounded-xl p-4">
-      <h2 class="text-lg sm:text-xl font-semibold mb-2">Burn</h2>
-      <p class="text-2xl sm:text-3xl font-bold text-pink-300 mb-2">$63.9K <span class="text-sm text-white/50">6 month avg</span></p>
-      <canvas id="burnChart" class="w-full aspect-[4/3] max-h-[250px]"></canvas>
+  <footer class="bg-white text-gray-400 py-8 px-6 border-t">
+    <div class="max-w-6xl mx-auto text-center">
+      <p>&copy; 2025 CashOptics. All rights reserved.</p>
     </div>
-
-    <!-- Card: Expenses -->
-    <div class="bg-[#161c36] rounded-xl p-4">
-      <h2 class="text-lg sm:text-xl font-semibold mb-2">Expenses</h2>
-      <canvas id="expensesChart" class="w-full aspect-[4/3] max-h-[300px]"></canvas>
-    </div>
-
-    <!-- Card: Solvency -->
-    <div class="bg-[#161c36] rounded-xl p-4 col-span-1 sm:col-span-2 lg:col-span-1">
-      <h2 class="text-lg sm:text-xl font-semibold mb-2">Solvency</h2>
-      <p class="text-3xl sm:text-4xl font-bold text-green-400 mb-4">10.8 <span class="text-sm">mth Runway ✅</span></p>
-      <canvas id="incomeChart" class="w-full aspect-[4/3] max-h-[250px]"></canvas>
-    </div>
-
-    <!-- Card: Debtors -->
-    <div class="bg-[#161c36] rounded-xl p-4">
-      <h2 class="text-lg sm:text-xl font-semibold mb-2">Debtors</h2>
-      <p class="text-xl sm:text-2xl font-bold text-blue-300 mb-1">$345K <span class="text-sm text-white/50">Total</span></p>
-      <p class="text-lg text-red-400">⚠️ $125K over 45 days</p>
-      <canvas id="debtorsChart" class="w-full aspect-[4/3] max-h-[200px] mt-4"></canvas>
-    </div>
-
-    <!-- Card: Currency Rates -->
-    <div class="bg-[#161c36] rounded-xl p-4">
-      <h2 class="text-lg sm:text-xl font-semibold mb-4">USD Exchange Rates</h2>
-      <ul class="space-y-2 text-lg">
-        <li><span class="font-bold text-white">0.89</span> <span class="text-white/60">EUR</span></li>
-        <li><span class="font-bold text-white">0.75</span> <span class="text-white/60">GBP</span></li>
-        <li><span class="font-bold text-white">1.27</span> <span class="text-white/60">CAD</span></li>
-      </ul>
-    </div>
-
-  </main>
+  </footer>
 
   <script>
-    // Mobile menu toggle
-    document.getElementById('menuToggle').addEventListener('click', () => {
-      const mobileMenu = document.getElementById('mobileMenu');
-      mobileMenu.classList.toggle('hidden');
-    });
-
-    // Chart data
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-
-    new Chart(document.getElementById('cashChart'), {
-      type: 'bar',
+    const ctx = document.getElementById('expensesChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
       data: {
-        labels: months,
+        labels: ['Food', 'Transport', 'Entertainment', 'Utilities', 'Shopping', 'Healthcare', 'Other'],
         datasets: [{
-          label: 'Cash',
-          data: [900000, 880000, 700000, 650000, 630000, 600000],
-          backgroundColor: 'rgb(56, 189, 248)'
+          label: 'Expenses',
+          data: [300, 75, 50, 110, 100, 40, 35],
+          backgroundColor: ['#f87171','#60a5fa','#34d399','#facc15','#a78bfa','#fb7185','#10b981']
         }]
       },
-      options: { responsive: true, plugins: { legend: { display: false } } }
-    });
-
-    new Chart(document.getElementById('burnChart'), {
-      type: 'line',
-      data: {
-        labels: months,
-        datasets: [{
-          label: 'Burn',
-          data: [40, 50, 110, 30, 45, 60],
-          borderColor: 'rgb(244, 114, 182)',
-          backgroundColor: 'rgba(244, 114, 182, 0.2)',
-          fill: true,
-          tension: 0.3
-        }]
-      },
-      options: { responsive: true, plugins: { legend: { display: false } } }
-    });
-
-    new Chart(document.getElementById('expensesChart'), {
-      type: 'line',
-      data: {
-        labels: months,
-        datasets: [
-          {
-            label: 'Salary',
-            data: [190000, 195000, 205000, 210000, 215000, 220000],
-            borderColor: '#38bdf8',
-            fill: false,
-            tension: 0.3
-          },
-          {
-            label: 'Fixed Costs',
-            data: [100000, 150000, 100000, 90000, 100000, 125000],
-            borderColor: '#d946ef',
-            fill: false,
-            tension: 0.3
-          },
-          {
-            label: 'Expenses',
-            data: [20000, 22000, 25000, 30000, 35000, 37000],
-            borderColor: '#facc15',
-            fill: false,
-            tension: 0.3
-          }
-        ]
-      },
-      options: { responsive: true }
-    });
-
-    new Chart(document.getElementById('incomeChart'), {
-      type: 'bar',
-      data: {
-        labels: months,
-        datasets: [
-          {
-            label: 'Income',
-            data: [300000, 310000, 330000, 340000, 355000, 360000],
-            backgroundColor: '#38bdf8'
-          },
-          {
-            label: 'Outgoings',
-            data: [420000, 430000, 470000, 450000, 480000, 490000],
-            backgroundColor: '#facc15'
-          }
-        ]
-      },
-      options: { responsive: true }
-    });
-
-    new Chart(document.getElementById('debtorsChart'), {
-      type: 'bar',
-      data: {
-        labels: months,
-        datasets: [{
-          label: 'Debtors',
-          data: [220000, 230000, 240000, 260000, 300000, 340000],
-          backgroundColor: 'rgb(56, 189, 248)'
-        }]
-      },
-      options: { responsive: true, plugins: { legend: { display: false } } }
+      options: {
+        responsive: true
+      }
     });
   </script>
+
 </body>
 </html>

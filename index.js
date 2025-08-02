@@ -10,6 +10,11 @@ app.get('/', (req, res) => {
   res.send('🚀 Node app running inside Docker!');
 });
 
+// HealthCheck
+app.get('/health', (req, res) => {
+  res.send('server ok');
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

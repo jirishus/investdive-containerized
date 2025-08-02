@@ -16,13 +16,13 @@ jobs:
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan 146.190.157.243 >> ~/.ssh/known_hosts
+          echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 146.190.157.243 >> ~/.ssh/known_hosts
 
       - name: Deploy via SSH
         run: |
-          ssh -i ~/.ssh/id_ed25519 sammy@146.190.157.243 << 'EOF'
+          ssh -i ~/.ssh/id_rsa sammy@146.190.157.243 << 'EOF'
             cd /home/sammy/investdive-containerized
             git pull origin main
             docker-compose down

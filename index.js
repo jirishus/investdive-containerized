@@ -7,7 +7,7 @@ app.use(express.json());
 
 // Route
 app.get('/', (req, res) => {
-  res.send('🚀 Node app running inside Docker!');
+  res.send('🚀 Node app running inside Docker autodeployed!');
 });
 
 // HealthCheck

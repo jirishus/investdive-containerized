@@ -1,16 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HTML5 Boilerplate</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>Cashflow Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+<body class="bg-[#0c1020] text-white min-h-screen p-6">
 
-<body>
-  <h1>Page Title</h1>
-  <script src="scripts.js"></script>
+  <div class="flex items-center justify-between mb-6">
+  <h1 class="text-3xl font-bold">💰 Cashflow Dashboard</h1>
+  <label class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer">
+    Upload CSV
+    <input type="file" id="csvInput" accept=".csv" class="hidden" />
+  </label>
+</div>
+
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- Cash in Bank -->
+    <div class="bg-[#161c36] rounded-xl p-4">
+      <h2 class="text-xl font-semibold mb-2">Cash in Bank</h2>
+      <p class="text-3xl font-bold text-blue-300 mb-2">$616.5K <span class="text-sm text-white/50">Current</span></p>
+      <canvas id="cashChart" class="w-full max-h-48"></canvas>
+    </div>
+
+    <!-- Burn Rate -->
+    <div class="bg-[#161c36] rounded-xl p-4">
+      <h2 class="text-xl font-semibold mb-2">Burn</h2>
+      <p class="text-3xl font-bold text-pink-300 mb-2">$63.9K <span class="text-sm text-white/50">6 month avg</span></p>
+      <canvas id="burnChart" class="w-full max-h-48"></canvas>
+    </div>
+
+    <!-- Expenses -->
+    <div class="bg-[#161c36] rounded-xl p-4">
+      <h2 class="text-xl font-semibold mb-2">Expenses</h2>
+      <canvas id="expensesChart" class="w-full max-h-56"></canvas>
+    </div>
+
+    <!-- Solvency + Income/Outgoings -->
+    <div class="bg-[#161c36] rounded-xl p-4 col-span-1 md:col-span-2 lg:col-span-1">
+      <h2 class="text-xl font-semibold mb-2">Solvency</h2>
+      <p class="text-4xl font-bold text-green-400 mb-4">10.8 <span class="text-sm">mth Runway ✅</span></p>
+      <canvas id="incomeChart" class="w-full max-h-48"></canvas>
+    </div>
+
+    <!-- Debtors -->
+    <div class="bg-[#161c36] rounded-xl p-4">
+      <h2 class="text-xl font-semibold mb-2">Debtors</h2>
+      <p class="text-2xl font-bold text-blue-300 mb-1">$345K <span class="text-sm text-white/50">Total</span></p>
+      <p class="text-xl text-red-400">⚠️ $125K over 45 days</p>
+      <canvas id="debtorsChart" class="w-full max-h-40 mt-4"></canvas>
+    </div>
+
+    <!-- Exchange Rates -->
+    <div class="bg-[#161c36] rounded-xl p-4">
+      <h2 class="text-xl font-semibold mb-4">USD Exchange Rates</h2>
+      <ul class="space-y-2 text-lg">
+        <li><span class="font-bold text-white">0.89</span> <span class="text-white/60">EUR</span></li>
+        <li><span class="font-bold text-white">0.75</span> <span class="text-white/60">GBP</span></li>
+        <li><span class="font-bold text-white">1.27</span> <span class="text-white/60">CAD</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <script>
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+    new Chart(document.getElementById('cashChart'), {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Cash',
+          data: [900000, 880000, 700000, 650000, 630000, 600000],
+          backgroundColor: 'rgb(56, 189, 248)',
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    new Chart(document.getElementById('burnChart'), {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Burn',
+          data: [40, 50, 110, 30, 45, 60],
+          borderColor: 'rgb(244, 114, 182)',
+          backgroundColor: 'rgba(244, 114, 182, 0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    new Chart(document.getElementById('expensesChart'), {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: 'Salary',
+            data: [190000, 195000, 205000, 210000, 215000, 220000],
+            borderColor: '#38bdf8',
+            fill: false,
+            tension: 0.3
+          },
+          {
+            label: 'Fixed Costs',
+            data: [100000, 150000, 100000, 90000, 100000, 125000],
+            borderColor: '#d946ef',
+            fill: false,
+            tension: 0.3
+          },
+          {
+            label: 'Expenses',
+            data: [20000, 22000, 25000, 30000, 35000, 37000],
+            borderColor: '#facc15',
+            fill: false,
+            tension: 0.3
+          }
+        ]
+      },
+      options: { responsive: true }
+    });
+
+    new Chart(document.getElementById('incomeChart'), {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: 'Income',
+            data: [300000, 310000, 330000, 340000, 355000, 360000],
+            backgroundColor: '#38bdf8'
+          },
+          {
+            label: 'Outgoings',
+            data: [420000, 430000, 470000, 450000, 480000, 490000],
+            backgroundColor: '#facc15'
+          }
+        ]
+      },
+      options: { responsive: true }
+    });
+
+    new Chart(document.getElementById('debtorsChart'), {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Debtors',
+          data: [220000, 230000, 240000, 260000, 300000, 340000],
+          backgroundColor: 'rgb(56, 189, 248)'
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+  </script>
+
 </body>
-
 </html>

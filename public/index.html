@@ -1,119 +1,439 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CashOptics - Financial Clarity for Founders</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Invaders</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #000428 0%, #000000 100%);
+        }
+        
+        .game-container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        canvas {
+            border: 2px solid #00ff00;
+            background: #000;
+            display: block;
+            margin: 10px auto;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+        }
+        
+        .ui {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #00ff00;
+        }
+        
+        .controls {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #ccc;
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid #ff0000;
+            text-align: center;
+            display: none;
+        }
+        
+        button {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #00cc00;
+        }
+    </style>
 </head>
-<body class="bg-[#f4f6fa] text-gray-900 font-sans">
-
-  <!-- Hero Section -->
-  <section class="bg-white py-16 px-6 shadow-sm">
-    <div class="max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12">
-      <div class="md:w-1/2 text-center md:text-left">
-        <h1 class="text-4xl font-bold leading-tight mb-4 text-blue-700">Manage your finances with <span class="text-blue-500">CashOptics</span></h1>
-        <p class="text-gray-600 mb-6 text-lg">Track your spending, upload CSVs, and visualize your finances with ease and clarity.</p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-          <a href="#dashboard" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded font-medium">Launch Live Demo</a>
-          <a href="#" class="border border-gray-300 text-gray-700 px-6 py-3 rounded font-medium">Download App</a>
+<body>
+    <div class="game-container">
+        <div class="ui">
+            <div>Score: <span id="score">0</span></div>
+            <div>Lives: <span id="lives">3</span></div>
+            <div>Level: <span id="level">1</span></div>
         </div>
-        <div class="flex items-center gap-4 mt-6 justify-center md:justify-start">
-          <img src="https://img.icons8.com/ios-filled/50/000000/apple-logo.png" class="h-6" alt="App Store"/>
-          <img src="https://img.icons8.com/ios-filled/50/000000/google-play.png" class="h-6" alt="Google Play"/>
-          <span class="text-sm text-gray-500">Available on iOS & Android</span>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div class="controls">
+            Use ARROW KEYS to move • SPACEBAR to shoot • R to restart
         </div>
-      </div>
-      <div class="md:w-1/2">
-        <div class="bg-blue-50 rounded-xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-blue-700 mb-4">Overview</h2>
-          <ul class="grid grid-cols-2 gap-4 text-sm text-gray-700">
-            <li class="bg-white p-3 rounded shadow text-center">
-              <div class="text-lg font-bold text-blue-600">$710.00</div>
-              <div>Total Expenses</div>
-            </li>
-            <li class="bg-white p-3 rounded shadow text-center">
-              <div class="text-lg font-bold text-blue-600">$23.67</div>
-              <div>Daily Avg</div>
-            </li>
-            <li class="bg-white p-3 rounded shadow text-center col-span-2">
-              <div class="text-lg font-bold text-blue-600">7</div>
-              <div>Categories</div>
-            </li>
-          </ul>
+        <div class="game-over" id="gameOver">
+            <h2>GAME OVER</h2>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <button onclick="restartGame()">Play Again</button>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Dashboard Section -->
-  <section id="dashboard" class="py-20 px-6">
-    <div class="max-w-6xl mx-auto text-center mb-10">
-      <h2 class="text-3xl font-bold text-blue-700 mb-2">Expense Overview</h2>
-      <p class="text-gray-600 mb-4">Upload a CSV or enter your own data to see where your money goes.</p>
-      <label class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded font-medium cursor-pointer inline-block">
-        Upload CSV
-        <input type="file" id="csvInput" accept=".csv" class="hidden" />
-      </label>
     </div>
 
-    <div class="bg-white p-6 rounded-lg shadow grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="text-left">
-        <h3 class="text-xl font-semibold text-blue-600 mb-4">Add New Expense</h3>
-        <form class="grid gap-4">
-          <input type="text" placeholder="Description" class="border border-gray-300 p-2 rounded w-full">
-          <div class="grid grid-cols-2 gap-4">
-            <input type="number" step="0.01" placeholder="Amount ($)" class="border border-gray-300 p-2 rounded w-full">
-            <input type="date" class="border border-gray-300 p-2 rounded w-full">
-          </div>
-          <select class="border border-gray-300 p-2 rounded w-full">
-            <option>Food</option>
-            <option>Transport</option>
-            <option>Entertainment</option>
-            <option>Utilities</option>
-            <option>Shopping</option>
-            <option>Healthcare</option>
-            <option>Other</option>
-          </select>
-          <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">➕ Add Expense</button>
-        </form>
-      </div>
-      <div>
-        <h3 class="text-xl font-semibold text-blue-600 mb-4">Spending Breakdown</h3>
-        <canvas id="expensesChart" class="w-full aspect-[4/3]"></canvas>
-        <div class="flex justify-center mt-4 gap-4">
-          <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm">Pie</button>
-          <button class="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm">Bar</button>
-          <button class="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm">Trend</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="bg-white text-gray-400 py-8 px-6 border-t">
-    <div class="max-w-6xl mx-auto text-center">
-      <p>&copy; 2025 CashOptics. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <script>
-    const ctx = document.getElementById('expensesChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Food', 'Transport', 'Entertainment', 'Utilities', 'Shopping', 'Healthcare', 'Other'],
-        datasets: [{
-          label: 'Expenses',
-          data: [300, 75, 50, 110, 100, 40, 35],
-          backgroundColor: ['#f87171','#60a5fa','#34d399','#facc15','#a78bfa','#fb7185','#10b981']
-        }]
-      },
-      options: {
-        responsive: true
-      }
-    });
-  </script>
-
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Game state
+        let gameRunning = true;
+        let score = 0;
+        let lives = 3;
+        let level = 1;
+        let keys = {};
+        
+        // Player
+        const player = {
+            x: canvas.width / 2 - 25,
+            y: canvas.height - 60,
+            width: 50,
+            height: 30,
+            speed: 5,
+            color: '#00ff00'
+        };
+        
+        // Bullets
+        let bullets = [];
+        let enemyBullets = [];
+        const bulletSpeed = 7;
+        const enemyBulletSpeed = 3;
+        
+        // Enemies
+        let enemies = [];
+        const enemyRows = 5;
+        const enemyCols = 10;
+        let enemyDirection = 1;
+        let enemySpeed = 1;
+        let enemyDropDistance = 20;
+        
+        // Particles for explosions
+        let particles = [];
+        
+        // Initialize enemies
+        function createEnemies() {
+            enemies = [];
+            for (let row = 0; row < enemyRows; row++) {
+                for (let col = 0; col < enemyCols; col++) {
+                    enemies.push({
+                        x: col * 60 + 100,
+                        y: row * 50 + 50,
+                        width: 40,
+                        height: 30,
+                        alive: true,
+                        type: row < 1 ? 'fast' : row < 3 ? 'medium' : 'slow',
+                        shootTimer: Math.random() * 300
+                    });
+                }
+            }
+        }
+        
+        // Input handling
+        document.addEventListener('keydown', (e) => {
+            keys[e.code] = true;
+            if (e.code === 'Space') {
+                e.preventDefault();
+                shoot();
+            }
+            if (e.code === 'KeyR') {
+                restartGame();
+            }
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            keys[e.code] = false;
+        });
+        
+        // Player shooting
+        function shoot() {
+            if (gameRunning) {
+                bullets.push({
+                    x: player.x + player.width / 2 - 2,
+                    y: player.y,
+                    width: 4,
+                    height: 10,
+                    speed: bulletSpeed
+                });
+            }
+        }
+        
+        // Enemy shooting
+        function enemyShoot(enemy) {
+            enemyBullets.push({
+                x: enemy.x + enemy.width / 2 - 2,
+                y: enemy.y + enemy.height,
+                width: 4,
+                height: 10,
+                speed: enemyBulletSpeed
+            });
+        }
+        
+        // Create explosion particles
+        function createExplosion(x, y, color = '#ff6600') {
+            for (let i = 0; i < 8; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    life: 30,
+                    color: color
+                });
+            }
+        }
+        
+        // Update game state
+        function update() {
+            if (!gameRunning) return;
+            
+            // Move player
+            if (keys['ArrowLeft'] && player.x > 0) {
+                player.x -= player.speed;
+            }
+            if (keys['ArrowRight'] && player.x < canvas.width - player.width) {
+                player.x += player.speed;
+            }
+            
+            // Update bullets
+            bullets = bullets.filter(bullet => {
+                bullet.y -= bullet.speed;
+                return bullet.y > 0;
+            });
+            
+            // Update enemy bullets
+            enemyBullets = enemyBullets.filter(bullet => {
+                bullet.y += bullet.speed;
+                return bullet.y < canvas.height;
+            });
+            
+            // Update particles
+            particles = particles.filter(particle => {
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.life--;
+                particle.vx *= 0.98;
+                particle.vy *= 0.98;
+                return particle.life > 0;
+            });
+            
+            // Move enemies
+            let shouldMoveDown = false;
+            for (let enemy of enemies) {
+                if (!enemy.alive) continue;
+                
+                if ((enemy.x <= 0 && enemyDirection === -1) || 
+                    (enemy.x >= canvas.width - enemy.width && enemyDirection === 1)) {
+                    shouldMoveDown = true;
+                    break;
+                }
+            }
+            
+            if (shouldMoveDown) {
+                enemyDirection *= -1;
+                for (let enemy of enemies) {
+                    if (enemy.alive) {
+                        enemy.y += enemyDropDistance;
+                    }
+                }
+            }
+            
+            for (let enemy of enemies) {
+                if (!enemy.alive) continue;
+                enemy.x += enemySpeed * enemyDirection;
+                
+                // Enemy shooting
+                enemy.shootTimer--;
+                if (enemy.shootTimer <= 0 && Math.random() < 0.001) {
+                    enemyShoot(enemy);
+                    enemy.shootTimer = Math.random() * 300 + 100;
+                }
+            }
+            
+            // Collision detection - bullets vs enemies
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                for (let j = enemies.length - 1; j >= 0; j--) {
+                    if (enemies[j].alive && 
+                        bullets[i].x < enemies[j].x + enemies[j].width &&
+                        bullets[i].x + bullets[i].width > enemies[j].x &&
+                        bullets[i].y < enemies[j].y + enemies[j].height &&
+                        bullets[i].y + bullets[i].height > enemies[j].y) {
+                        
+                        // Hit!
+                        createExplosion(enemies[j].x + enemies[j].width / 2, enemies[j].y + enemies[j].height / 2);
+                        enemies[j].alive = false;
+                        bullets.splice(i, 1);
+                        
+                        // Score based on enemy type
+                        const points = enemies[j].type === 'fast' ? 30 : 
+                                     enemies[j].type === 'medium' ? 20 : 10;
+                        score += points;
+                        break;
+                    }
+                }
+            }
+            
+            // Collision detection - enemy bullets vs player
+            for (let i = enemyBullets.length - 1; i >= 0; i--) {
+                if (enemyBullets[i].x < player.x + player.width &&
+                    enemyBullets[i].x + enemyBullets[i].width > player.x &&
+                    enemyBullets[i].y < player.y + player.height &&
+                    enemyBullets[i].y + enemyBullets[i].height > player.y) {
+                    
+                    createExplosion(player.x + player.width / 2, player.y + player.height / 2, '#ff0000');
+                    enemyBullets.splice(i, 1);
+                    lives--;
+                    
+                    if (lives <= 0) {
+                        gameOver();
+                    }
+                    break;
+                }
+            }
+            
+            // Check if all enemies are dead
+            if (enemies.every(enemy => !enemy.alive)) {
+                level++;
+                enemySpeed += 0.5;
+                createEnemies();
+            }
+            
+            // Check if enemies reached the bottom
+            for (let enemy of enemies) {
+                if (enemy.alive && enemy.y + enemy.height >= player.y) {
+                    gameOver();
+                    break;
+                }
+            }
+            
+            updateUI();
+        }
+        
+        // Draw everything
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw stars background
+            ctx.fillStyle = '#fff';
+            for (let i = 0; i < 100; i++) {
+                const x = (i * 37) % canvas.width;
+                const y = (i * 73) % canvas.height;
+                ctx.fillRect(x, y, 1, 1);
+            }
+            
+            // Draw player
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // Draw player cannon
+            ctx.fillRect(player.x + player.width / 2 - 3, player.y - 10, 6, 10);
+            
+            // Draw bullets
+            ctx.fillStyle = '#ffff00';
+            for (let bullet of bullets) {
+                ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+            }
+            
+            // Draw enemy bullets
+            ctx.fillStyle = '#ff0000';
+            for (let bullet of enemyBullets) {
+                ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+            }
+            
+            // Draw enemies
+            for (let enemy of enemies) {
+                if (!enemy.alive) continue;
+                
+                const colors = {
+                    fast: '#ff6600',
+                    medium: '#ffff00',
+                    slow: '#00ffff'
+                };
+                
+                ctx.fillStyle = colors[enemy.type];
+                ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                
+                // Draw enemy details
+                ctx.fillStyle = '#000';
+                ctx.fillRect(enemy.x + 5, enemy.y + 5, 5, 5);
+                ctx.fillRect(enemy.x + 30, enemy.y + 5, 5, 5);
+            }
+            
+            // Draw particles
+            for (let particle of particles) {
+                ctx.fillStyle = particle.color;
+                ctx.globalAlpha = particle.life / 30;
+                ctx.fillRect(particle.x, particle.y, 3, 3);
+                ctx.globalAlpha = 1;
+            }
+        }
+        
+        // Update UI
+        function updateUI() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('level').textContent = level;
+        }
+        
+        // Game over
+        function gameOver() {
+            gameRunning = false;
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('gameOver').style.display = 'block';
+        }
+        
+        // Restart game
+        function restartGame() {
+            gameRunning = true;
+            score = 0;
+            lives = 3;
+            level = 1;
+            enemySpeed = 1;
+            player.x = canvas.width / 2 - 25;
+            bullets = [];
+            enemyBullets = [];
+            particles = [];
+            createEnemies();
+            document.getElementById('gameOver').style.display = 'none';
+            updateUI();
+        }
+        
+        // Game loop
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Initialize game
+        createEnemies();
+        updateUI();
+        gameLoop();
+    </script>
 </body>
 </html>

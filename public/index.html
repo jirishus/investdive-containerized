@@ -2,631 +2,672 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Space Invaders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvestDive - AI-Powered Investment Intelligence | Coming Soon</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
         }
-        
+
         body {
-            background: #000;
-            color: #fff;
-            font-family: 'Courier New', monospace;
-            overflow: hidden;
-            height: 100vh;
-            background: linear-gradient(180deg, #000428 0%, #000000 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0c1426 0%, #1a0b2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
         }
-        
-        .game-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            width: 100vw;
-        }
-        
-        .ui {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #00ff00;
-            background: rgba(0, 0, 0, 0.8);
-            min-height: 50px;
-            align-items: center;
-        }
-        
-        .game-area {
-            flex: 1;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #000;
-        }
-        
-        canvas {
-            border: 2px solid #00ff00;
-            background: #000;
-            max-width: 100%;
-            max-height: 100%;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-        }
-        
-        .controls {
-            position: absolute;
-            bottom: 0;
+
+        /* Animated background elements */
+        .bg-animation {
+            position: fixed;
+            top: 0;
             left: 0;
-            right: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .chart-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #10b981, #3b82f6, transparent);
+            animation: stockFlow 8s infinite linear;
+        }
+
+        .data-point {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: dataFloat 6s infinite ease-in-out;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+            animation: orbFloat 10s infinite ease-in-out;
+        }
+
+        @keyframes stockFlow {
+            0% { transform: translateX(-100%) scaleY(1); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateX(100%) scaleY(0.5); opacity: 0; }
+        }
+
+        @keyframes dataFloat {
+            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.3; }
+            50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -30px) scale(1.1); }
+            66% { transform: translate(-30px, 40px) scale(0.9); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(12, 20, 38, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            height: 120px;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        
-        .movement-controls {
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             display: flex;
-            gap: 15px;
-        }
-        
-        .control-btn {
-            width: 70px;
-            height: 70px;
-            background: rgba(0, 255, 0, 0.3);
-            border: 2px solid #00ff00;
-            border-radius: 10px;
-            color: #00ff00;
-            font-size: 24px;
-            font-weight: bold;
-            display: flex;
-            justify-content: center;
             align-items: center;
-            touch-action: manipulation;
-            user-select: none;
-            transition: all 0.1s;
+            gap: 0.5rem;
         }
-        
-        .control-btn:active {
-            background: rgba(0, 255, 0, 0.6);
-            transform: scale(0.95);
+
+        .logo::before {
+            content: '📊';
+            font-size: 1.5rem;
         }
-        
-        .shoot-btn {
-            width: 100px;
-            height: 70px;
-            background: rgba(255, 255, 0, 0.3);
-            border: 2px solid #ffff00;
-            border-radius: 10px;
-            color: #ffff00;
-            font-size: 18px;
-            font-weight: bold;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            touch-action: manipulation;
-            user-select: none;
-            transition: all 0.1s;
-        }
-        
-        .shoot-btn:active {
-            background: rgba(255, 255, 0, 0.6);
-            transform: scale(0.95);
-        }
-        
-        .game-over {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.95);
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid #ff0000;
-            text-align: center;
-            display: none;
-            z-index: 1000;
-        }
-        
-        .restart-btn {
-            background: #00ff00;
-            color: #000;
+
+        .nav-button {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
             border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-family: 'Courier New', monospace;
-            border-radius: 8px;
-            margin-top: 15px;
-            touch-action: manipulation;
+            cursor: pointer;
         }
-        
-        .restart-btn:active {
-            transform: scale(0.95);
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
         }
-        
-        @media (max-width: 480px) {
-            .ui {
-                font-size: 14px;
-                padding: 8px 15px;
+
+        /* Main Content */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .coming-soon-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #10b981 50%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: #10b981;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Email Signup Form */
+        .signup-form {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .email-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .email-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Features Preview */
+        .features-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #10b981, transparent);
+            transition: left 0.3s ease;
+        }
+
+        .feature-item:hover::before {
+            left: 100%;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-item h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-item p {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Launch Timeline */
+        .timeline {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(20px);
+        }
+
+        .timeline h3 {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .timeline-item {
+            text-align: center;
+            position: relative;
+        }
+
+        .timeline-date {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-desc {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        /* Social Proof */
+        .social-proof {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .waitlist-count {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #10b981;
+            margin-bottom: 0.5rem;
+        }
+
+        .waitlist-text {
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(16, 185, 129, 0.2);
+            background: rgba(12, 20, 38, 0.5);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #10b981;
+        }
+
+        footer p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .signup-form {
+                flex-direction: column;
+                align-items: center;
             }
             
-            .control-btn {
-                width: 60px;
-                height: 60px;
-                font-size: 20px;
+            .email-input {
+                min-width: 100%;
+                margin-bottom: 1rem;
             }
             
-            .shoot-btn {
-                width: 80px;
-                height: 60px;
-                font-size: 16px;
+            .submit-btn {
+                width: 100%;
             }
             
-            .controls {
-                height: 100px;
-                padding: 15px;
+            .timeline-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <div class="ui">
-            <div>Score: <span id="score">0</span></div>
-            <div>Lives: <span id="lives">3</span></div>
-            <div>Level: <span id="level">1</span></div>
-        </div>
-        
-        <div class="game-area">
-            <canvas id="gameCanvas"></canvas>
-            
-            <div class="controls">
-                <div class="movement-controls">
-                    <div class="control-btn" id="leftBtn">◀</div>
-                    <div class="control-btn" id="rightBtn">▶</div>
-                </div>
-                <div class="shoot-btn" id="shootBtn">FIRE</div>
-            </div>
-        </div>
-        
-        <div class="game-over" id="gameOver">
-            <h2>GAME OVER</h2>
-            <p>Final Score: <span id="finalScore">0</span></p>
-            <button class="restart-btn" onclick="restartGame()">Play Again</button>
-        </div>
+    <div class="bg-animation">
+        <div class="chart-lines" id="chartLines"></div>
     </div>
 
+    <header>
+        <nav>
+            <div class="logo">InvestDive</div>
+            <a href="#notify" class="nav-button">Get Early Access</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="coming-soon-badge">🚀 Coming Soon</div>
+            <h1>InvestDive</h1>
+            <div class="subtitle">AI-Powered Investment Intelligence</div>
+            <p>Dive deep into market insights with advanced AI analysis. Make smarter investment decisions with real-time data processing, predictive analytics, and personalized portfolio optimization.</p>
+            
+            <form class="signup-form" id="signupForm">
+                <input type="email" class="email-input" placeholder="Enter your email for early access" required>
+                <button type="submit" class="submit-btn">Join Waitlist</button>
+            </form>
+
+            <div class="social-proof">
+                <div class="waitlist-count" id="waitlistCount">2,847</div>
+                <div class="waitlist-text">investors already on the waitlist</div>
+            </div>
+
+            <div class="features-preview">
+                <div class="feature-item">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Market Analysis</h3>
+                    <p>Advanced algorithms analyze market trends and predict optimal investment opportunities</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📈</div>
+                    <h3>Smart Portfolio</h3>
+                    <p>Automated portfolio rebalancing based on your risk tolerance and investment goals</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-time Insights</h3>
+                    <p>Instant notifications about market movements and personalized investment recommendations</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Risk Management</h3>
+                    <p>AI-powered risk assessment to protect your investments and maximize returns</p>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <h3>Launch Roadmap</h3>
+                <div class="timeline-items">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q1 2025</div>
+                        <div class="timeline-title">Beta Launch</div>
+                        <div class="timeline-desc">Early access for waitlist members</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q2 2025</div>
+                        <div class="timeline-title">Public Release</div>
+                        <div class="timeline-desc">Full platform available to all users</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q3 2025</div>
+                        <div class="timeline-title">Advanced Features</div>
+                        <div class="timeline-desc">Options trading and crypto integration</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q4 2025</div>
+                        <div class="timeline-title">Global Expansion</div>
+                        <div class="timeline-desc">International markets and currencies</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#about">About</a>
+            <a href="#privacy">Privacy Policy</a>
+            <a href="#terms">Terms of Service</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <p>&copy; 2025 InvestDive. Revolutionizing investment intelligence with AI.</p>
+    </footer>
+
     <script>
-        // Setup canvas for mobile
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        function resizeCanvas() {
-            const container = document.querySelector('.game-area');
-            const containerRect = container.getBoundingClientRect();
-            const maxWidth = containerRect.width - 20;
-            const maxHeight = containerRect.height - 140; // Account for controls
+        // Create animated chart lines background
+        function createChartLines() {
+            const container = document.getElementById('chartLines');
             
-            // Maintain 4:3 aspect ratio
-            const aspectRatio = 4 / 3;
-            let width = maxWidth;
-            let height = width / aspectRatio;
-            
-            if (height > maxHeight) {
-                height = maxHeight;
-                width = height * aspectRatio;
+            // Create flowing lines
+            for (let i = 0; i < 15; i++) {
+                const line = document.createElement('div');
+                line.className = 'line';
+                line.style.top = Math.random() * 100 + '%';
+                line.style.width = (Math.random() * 300 + 100) + 'px';
+                line.style.animationDelay = Math.random() * 8 + 's';
+                line.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                container.appendChild(line);
             }
             
-            canvas.width = Math.floor(width);
-            canvas.height = Math.floor(height);
+            // Create data points
+            for (let i = 0; i < 25; i++) {
+                const point = document.createElement('div');
+                point.className = 'data-point';
+                point.style.left = Math.random() * 100 + '%';
+                point.style.top = Math.random() * 100 + '%';
+                point.style.animationDelay = Math.random() * 6 + 's';
+                container.appendChild(point);
+            }
+            
+            // Create glowing orbs
+            for (let i = 0; i < 5; i++) {
+                const orb = document.createElement('div');
+                orb.className = 'glow-orb';
+                const size = Math.random() * 100 + 50;
+                orb.style.width = size + 'px';
+                orb.style.height = size + 'px';
+                orb.style.left = Math.random() * 100 + '%';
+                orb.style.top = Math.random() * 100 + '%';
+                orb.style.animationDelay = Math.random() * 10 + 's';
+                container.appendChild(orb);
+            }
         }
-        
-        // Initial canvas setup
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-        
-        // Game state
-        let gameRunning = true;
-        let score = 0;
-        let lives = 3;
-        let level = 1;
-        let controls = { left: false, right: false };
-        
-        // Player
-        const player = {
-            x: canvas.width / 2 - 25,
-            y: canvas.height - 60,
-            width: 50,
-            height: 30,
-            speed: 4,
-            color: '#00ff00'
-        };
-        
-        // Bullets
-        let bullets = [];
-        let enemyBullets = [];
-        const bulletSpeed = 6;
-        const enemyBulletSpeed = 2;
-        
-        // Enemies
-        let enemies = [];
-        const enemyRows = 5;
-        const enemyCols = 8;
-        let enemyDirection = 1;
-        let enemySpeed = 1;
-        let enemyDropDistance = 15;
-        
-        // Particles
-        let particles = [];
-        
-        // Touch controls
-        const leftBtn = document.getElementById('leftBtn');
-        const rightBtn = document.getElementById('rightBtn');
-        const shootBtn = document.getElementById('shootBtn');
-        
-        // Touch event handlers
-        function addTouchControls() {
-            // Left button
-            leftBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                controls.left = true;
-            });
-            leftBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                controls.left = false;
-            });
-            leftBtn.addEventListener('touchcancel', (e) => {
-                e.preventDefault();
-                controls.left = false;
-            });
+
+        // Handle form submission
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('.email-input').value;
+            const submitBtn = this.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
             
-            // Right button
-            rightBtn.addEventListener('touchstart', (e) => {
+            // Simulate signup process
+            submitBtn.textContent = 'Joining...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                submitBtn.textContent = '✓ Added to Waitlist!';
+                submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                
+                // Update waitlist counter
+                const counter = document.getElementById('waitlistCount');
+                const currentCount = parseInt(counter.textContent.replace(',', ''));
+                counter.textContent = (currentCount + 1).toLocaleString();
+                
+                // Reset form after delay
+                setTimeout(() => {
+                    this.reset();
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = 'linear-gradient(135deg, #10b981, #3b82f6)';
+                }, 3000);
+            }, 2000);
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(12, 20, 38, 0.95)';
+            } else {
+                header.style.background = 'rgba(12, 20, 38, 0.8)';
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                controls.right = true;
-            });
-            rightBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                controls.right = false;
-            });
-            rightBtn.addEventListener('touchcancel', (e) => {
-                e.preventDefault();
-                controls.right = false;
-            });
-            
-            // Shoot button
-            shootBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                shoot();
-            });
-            
-            // Also support mouse for testing on desktop
-            leftBtn.addEventListener('mousedown', () => controls.left = true);
-            leftBtn.addEventListener('mouseup', () => controls.left = false);
-            leftBtn.addEventListener('mouseleave', () => controls.left = false);
-            
-            rightBtn.addEventListener('mousedown', () => controls.right = true);
-            rightBtn.addEventListener('mouseup', () => controls.right = false);
-            rightBtn.addEventListener('mouseleave', () => controls.right = false);
-            
-            shootBtn.addEventListener('mousedown', () => shoot());
-            
-            // Tap anywhere on game area to shoot
-            canvas.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                shoot();
-            });
-        }
-        
-        // Initialize enemies
-        function createEnemies() {
-            enemies = [];
-            const enemyWidth = Math.floor(canvas.width / (enemyCols + 2));
-            const enemyHeight = Math.floor(enemyWidth * 0.75);
-            const startX = (canvas.width - (enemyCols * enemyWidth)) / 2;
-            
-            for (let row = 0; row < enemyRows; row++) {
-                for (let col = 0; col < enemyCols; col++) {
-                    enemies.push({
-                        x: startX + col * enemyWidth,
-                        y: 50 + row * (enemyHeight + 10),
-                        width: enemyWidth - 5,
-                        height: enemyHeight,
-                        alive: true,
-                        type: row < 1 ? 'fast' : row < 3 ? 'medium' : 'slow',
-                        shootTimer: Math.random() * 200
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
                     });
                 }
-            }
-        }
-        
-        // Player shooting
-        function shoot() {
-            if (gameRunning && bullets.length < 3) { // Limit bullets on mobile
-                bullets.push({
-                    x: player.x + player.width / 2 - 2,
-                    y: player.y,
-                    width: 4,
-                    height: 8,
-                    speed: bulletSpeed
-                });
-            }
-        }
-        
-        // Enemy shooting
-        function enemyShoot(enemy) {
-            enemyBullets.push({
-                x: enemy.x + enemy.width / 2 - 2,
-                y: enemy.y + enemy.height,
-                width: 4,
-                height: 8,
-                speed: enemyBulletSpeed
             });
-        }
-        
-        // Create explosion particles
-        function createExplosion(x, y, color = '#ff6600') {
-            for (let i = 0; i < 6; i++) {
-                particles.push({
-                    x: x,
-                    y: y,
-                    vx: (Math.random() - 0.5) * 6,
-                    vy: (Math.random() - 0.5) * 6,
-                    life: 20,
-                    color: color
-                });
-            }
-        }
-        
-        // Update game state
-        function update() {
-            if (!gameRunning) return;
+        });
+
+        // Animate waitlist counter on scroll
+        function animateCounter() {
+            const counter = document.getElementById('waitlistCount');
+            const targetValue = 2847;
+            let currentValue = 0;
+            const increment = targetValue / 100;
             
-            // Update player position based on canvas size
-            player.y = canvas.height - 60;
-            player.width = Math.max(30, canvas.width / 16);
-            player.height = Math.max(20, player.width * 0.6);
-            
-            // Move player
-            if (controls.left && player.x > 0) {
-                player.x -= player.speed;
-            }
-            if (controls.right && player.x < canvas.width - player.width) {
-                player.x += player.speed;
-            }
-            
-            // Update bullets
-            bullets = bullets.filter(bullet => {
-                bullet.y -= bullet.speed;
-                return bullet.y > 0;
-            });
-            
-            // Update enemy bullets
-            enemyBullets = enemyBullets.filter(bullet => {
-                bullet.y += bullet.speed;
-                return bullet.y < canvas.height;
-            });
-            
-            // Update particles
-            particles = particles.filter(particle => {
-                particle.x += particle.vx;
-                particle.y += particle.vy;
-                particle.life--;
-                particle.vx *= 0.95;
-                particle.vy *= 0.95;
-                return particle.life > 0;
-            });
-            
-            // Move enemies
-            let shouldMoveDown = false;
-            for (let enemy of enemies) {
-                if (!enemy.alive) continue;
-                
-                if ((enemy.x <= 0 && enemyDirection === -1) || 
-                    (enemy.x >= canvas.width - enemy.width && enemyDirection === 1)) {
-                    shouldMoveDown = true;
-                    break;
+            const updateCounter = () => {
+                if (currentValue < targetValue) {
+                    currentValue += increment;
+                    counter.textContent = Math.floor(currentValue).toLocaleString();
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = targetValue.toLocaleString();
                 }
-            }
+            };
             
-            if (shouldMoveDown) {
-                enemyDirection *= -1;
-                enemySpeed += 0.2;
-                for (let enemy of enemies) {
-                    if (enemy.alive) {
-                        enemy.y += enemyDropDistance;
-                    }
-                }
-            }
-            
-            for (let enemy of enemies) {
-                if (!enemy.alive) continue;
-                enemy.x += enemySpeed * enemyDirection;
-                
-                // Enemy shooting (reduced frequency for mobile)
-                enemy.shootTimer--;
-                if (enemy.shootTimer <= 0 && Math.random() < 0.005) {
-                    enemyShoot(enemy);
-                    enemy.shootTimer = Math.random() * 200 + 50;
-                }
-            }
-            
-            // Collision detection - bullets vs enemies
-            for (let i = bullets.length - 1; i >= 0; i--) {
-                for (let j = enemies.length - 1; j >= 0; j--) {
-                    if (enemies[j].alive && 
-                        bullets[i].x < enemies[j].x + enemies[j].width &&
-                        bullets[i].x + bullets[i].width > enemies[j].x &&
-                        bullets[i].y < enemies[j].y + enemies[j].height &&
-                        bullets[i].y + bullets[i].height > enemies[j].y) {
-                        
-                        createExplosion(enemies[j].x + enemies[j].width / 2, enemies[j].y + enemies[j].height / 2);
-                        enemies[j].alive = false;
-                        bullets.splice(i, 1);
-                        
-                        const points = enemies[j].type === 'fast' ? 30 : 
-                                     enemies[j].type === 'medium' ? 20 : 10;
-                        score += points;
-                        break;
-                    }
-                }
-            }
-            
-            // Collision detection - enemy bullets vs player
-            for (let i = enemyBullets.length - 1; i >= 0; i--) {
-                if (enemyBullets[i].x < player.x + player.width &&
-                    enemyBullets[i].x + enemyBullets[i].width > player.x &&
-                    enemyBullets[i].y < player.y + player.height &&
-                    enemyBullets[i].y + enemyBullets[i].height > player.y) {
-                    
-                    createExplosion(player.x + player.width / 2, player.y + player.height / 2, '#ff0000');
-                    enemyBullets.splice(i, 1);
-                    lives--;
-                    
-                    if (lives <= 0) {
-                        gameOver();
-                    }
-                    break;
-                }
-            }
-            
-            // Check if all enemies are dead
-            if (enemies.every(enemy => !enemy.alive)) {
-                level++;
-                createEnemies();
-            }
-            
-            // Check if enemies reached the bottom
-            for (let enemy of enemies) {
-                if (enemy.alive && enemy.y + enemy.height >= player.y) {
-                    gameOver();
-                    break;
-                }
-            }
-            
-            updateUI();
+            updateCounter();
         }
+
+        // Initialize animations
+        createChartLines();
         
-        // Draw everything
-        function draw() {
-            // Clear canvas
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Start counter animation when page loads
+        window.addEventListener('load', () => {
+            setTimeout(animateCounter, 1000);
+        });
+
+        // Add parallax effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const bgAnimation = document.querySelector('.bg-animation');
             
-            // Draw stars background
-            ctx.fillStyle = '#fff';
-            for (let i = 0; i < Math.floor(canvas.width / 8); i++) {
-                const x = (i * 37) % canvas.width;
-                const y = (i * 73) % canvas.height;
-                ctx.fillRect(x, y, 1, 1);
-            }
-            
-            // Draw player
-            ctx.fillStyle = player.color;
-            ctx.fillRect(player.x, player.y, player.width, player.height);
-            ctx.fillRect(player.x + player.width / 2 - 2, player.y - 6, 4, 6);
-            
-            // Draw bullets
-            ctx.fillStyle = '#ffff00';
-            for (let bullet of bullets) {
-                ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-            }
-            
-            // Draw enemy bullets
-            ctx.fillStyle = '#ff0000';
-            for (let bullet of enemyBullets) {
-                ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-            }
-            
-            // Draw enemies
-            for (let enemy of enemies) {
-                if (!enemy.alive) continue;
-                
-                const colors = {
-                    fast: '#ff6600',
-                    medium: '#ffff00',
-                    slow: '#00ffff'
-                };
-                
-                ctx.fillStyle = colors[enemy.type];
-                ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-                
-                // Draw enemy details
-                ctx.fillStyle = '#000';
-                const eyeSize = Math.max(2, enemy.width / 8);
-                ctx.fillRect(enemy.x + eyeSize, enemy.y + eyeSize, eyeSize, eyeSize);
-                ctx.fillRect(enemy.x + enemy.width - eyeSize * 2, enemy.y + eyeSize, eyeSize, eyeSize);
-            }
-            
-            // Draw particles
-            for (let particle of particles) {
-                ctx.fillStyle = particle.color;
-                ctx.globalAlpha = particle.life / 20;
-                ctx.fillRect(particle.x, particle.y, 3, 3);
-                ctx.globalAlpha = 1;
-            }
-        }
-        
-        // Update UI
-        function updateUI() {
-            document.getElementById('score').textContent = score;
-            document.getElementById('lives').textContent = lives;
-            document.getElementById('level').textContent = level;
-        }
-        
-        // Game over
-        function gameOver() {
-            gameRunning = false;
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('gameOver').style.display = 'block';
-        }
-        
-        // Restart game
-        function restartGame() {
-            gameRunning = true;
-            score = 0;
-            lives = 3;
-            level = 1;
-            enemySpeed = 1;
-            player.x = canvas.width / 2 - 25;
-            bullets = [];
-            enemyBullets = [];
-            particles = [];
-            controls = { left: false, right: false };
-            createEnemies();
-            document.getElementById('gameOver').style.display = 'none';
-            updateUI();
-        }
-        
-        // Game loop
-        function gameLoop() {
-            update();
-            draw();
-            requestAnimationFrame(gameLoop);
-        }
-        
-        // Initialize game
-        addTouchControls();
-        createEnemies();
-        updateUI();
-        gameLoop();
-        
-        // Handle orientation changes
-        window.addEventListener('orientationchange', () => {
-            setTimeout(() => {
-                resizeCanvas();
-                player.x = Math.min(player.x, canvas.width - player.width);
-                createEnemies(); // Recreate enemies for new canvas size
-            }, 100);
+            hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            bgAnimation.style.transform = `translateY(${scrolled * 0.1}px)`;
         });
     </script>
 </body>

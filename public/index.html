@@ -12,69 +12,11 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #0c1426 0%, #1a0b2e 50%, #16213e 100%);
-            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            color: #1f2937;
+            line-height: 1.6;
             overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* Animated background elements */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.6;
-        }
-
-        .chart-lines {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .line {
-            position: absolute;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #10b981, #3b82f6, transparent);
-            animation: stockFlow 8s infinite linear;
-        }
-
-        .data-point {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #10b981;
-            border-radius: 50%;
-            animation: dataFloat 6s infinite ease-in-out;
-        }
-
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
-            animation: orbFloat 10s infinite ease-in-out;
-        }
-
-        @keyframes stockFlow {
-            0% { transform: translateX(-100%) scaleY(1); opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { transform: translateX(100%) scaleY(0.5); opacity: 0; }
-        }
-
-        @keyframes dataFloat {
-            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.3; }
-            50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
-        }
-
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(50px, -30px) scale(1.1); }
-            66% { transform: translate(-30px, 40px) scale(0.9); }
         }
 
         /* Header */
@@ -83,9 +25,9 @@
             top: 0;
             width: 100%;
             z-index: 1000;
-            background: rgba(12, 20, 38, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e7eb;
             transition: all 0.3s ease;
         }
 
@@ -100,11 +42,8 @@
 
         .logo {
             font-size: 1.8rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #10b981, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-weight: 800;
+            color: #1f2937;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -116,22 +55,22 @@
         }
 
         .nav-button {
-            background: linear-gradient(135deg, #10b981, #3b82f6);
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            text-decoration: none;
+            background: #3b82f6;
             color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
             border: none;
             cursor: pointer;
+            font-size: 0.9rem;
         }
 
         .nav-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
         /* Main Content */
@@ -142,6 +81,7 @@
             justify-content: center;
             text-align: center;
             padding: 0 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             position: relative;
         }
 
@@ -152,40 +92,36 @@
 
         .coming-soon-badge {
             display: inline-block;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #10b981;
+            background: #dbeafe;
+            color: #1d4ed8;
             padding: 0.5rem 1.5rem;
             border-radius: 50px;
             font-size: 0.9rem;
             font-weight: 600;
             margin-bottom: 2rem;
-            animation: pulse 2s infinite;
+            border: 1px solid #bfdbfe;
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
+            font-size: clamp(3rem, 8vw, 5rem);
             font-weight: 900;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #ffffff 0%, #10b981 50%, #3b82f6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #1f2937;
             line-height: 1.1;
         }
 
         .hero .subtitle {
             font-size: 1.5rem;
-            color: #10b981;
+            color: #3b82f6;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .hero p {
             font-size: 1.25rem;
             margin-bottom: 3rem;
-            color: #cbd5e1;
-            line-height: 1.6;
+            color: #4b5563;
+            line-height: 1.7;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
@@ -207,119 +143,104 @@
             flex: 1;
             min-width: 250px;
             padding: 1rem 1.5rem;
-            border-radius: 50px;
-            border: 2px solid rgba(16, 185, 129, 0.3);
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
+            border-radius: 8px;
+            border: 2px solid #d1d5db;
+            background: white;
+            color: #1f2937;
             font-size: 1rem;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .email-input:focus {
             outline: none;
-            border-color: #10b981;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .email-input::placeholder {
-            color: #94a3b8;
+            color: #9ca3af;
         }
 
         .submit-btn {
-            background: linear-gradient(135deg, #10b981, #3b82f6);
-            padding: 1rem 2rem;
-            border-radius: 50px;
+            background: #3b82f6;
             color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 1rem;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
             white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
         /* Features Preview */
         .features-preview {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            gap: 2rem;
             margin-bottom: 4rem;
         }
 
         .feature-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            border-radius: 15px;
-            padding: 1.5rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
             text-align: center;
             transition: all 0.3s ease;
-            backdrop-filter: blur(20px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #10b981, transparent);
-            transition: left 0.3s ease;
-        }
-
-        .feature-item:hover::before {
-            left: 100%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .feature-item:hover {
-            transform: translateY(-5px);
-            border-color: rgba(16, 185, 129, 0.4);
-            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
         }
 
         .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
             display: block;
         }
 
         .feature-item h3 {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            color: #10b981;
-            margin-bottom: 0.5rem;
+            color: #1f2937;
+            margin-bottom: 1rem;
         }
 
         .feature-item p {
-            color: #cbd5e1;
-            font-size: 0.9rem;
-            line-height: 1.4;
+            color: #6b7280;
+            font-size: 1rem;
+            line-height: 1.6;
         }
 
         /* Launch Timeline */
         .timeline {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            border-radius: 20px;
-            padding: 2rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 3rem;
             margin-bottom: 4rem;
-            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .timeline h3 {
             text-align: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #10b981;
-            margin-bottom: 2rem;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 2.5rem;
         }
 
         .timeline-items {
@@ -334,10 +255,10 @@
         }
 
         .timeline-date {
-            background: linear-gradient(135deg, #10b981, #3b82f6);
+            background: #3b82f6;
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 0.9rem;
             margin-bottom: 1rem;
@@ -345,40 +266,47 @@
         }
 
         .timeline-title {
-            font-weight: 600;
-            color: white;
-            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
         }
 
         .timeline-desc {
-            color: #cbd5e1;
-            font-size: 0.9rem;
+            color: #6b7280;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
         /* Social Proof */
         .social-proof {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
         }
 
         .waitlist-count {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 900;
-            color: #10b981;
+            color: #3b82f6;
             margin-bottom: 0.5rem;
         }
 
         .waitlist-text {
-            color: #cbd5e1;
-            font-size: 1rem;
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
 
         /* Footer */
         footer {
             text-align: center;
             padding: 3rem 2rem;
-            border-top: 1px solid rgba(16, 185, 129, 0.2);
-            background: rgba(12, 20, 38, 0.5);
+            border-top: 1px solid #e5e7eb;
+            background: #f9fafb;
         }
 
         .footer-links {
@@ -390,18 +318,18 @@
         }
 
         .footer-links a {
-            color: #cbd5e1;
+            color: #6b7280;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
 
         .footer-links a:hover {
-            color: #10b981;
+            color: #3b82f6;
         }
 
         footer p {
-            color: #94a3b8;
+            color: #9ca3af;
             font-size: 0.9rem;
         }
 
@@ -414,11 +342,6 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
         }
 
         /* Mobile Responsiveness */
@@ -445,14 +368,47 @@
                 flex-direction: column;
                 gap: 1rem;
             }
+
+            .hero h1 {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+
+            .timeline {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Additional TOP-inspired styling */
+        .section-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 4rem auto;
+            max-width: 800px;
+        }
+
+        .highlight-box {
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .highlight-box h4 {
+            color: #1d4ed8;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-box p {
+            color: #374151;
+            font-size: 1rem;
         }
     </style>
 </head>
 <body>
-    <div class="bg-animation">
-        <div class="chart-lines" id="chartLines"></div>
-    </div>
-
     <header>
         <nav>
             <div class="logo">InvestDive</div>
@@ -476,28 +432,39 @@
                 <div class="waitlist-count" id="waitlistCount">2,847</div>
                 <div class="waitlist-text">investors already on the waitlist</div>
             </div>
+        </div>
+    </section>
 
+    <div class="section-divider"></div>
+
+    <section class="hero" style="min-height: auto; padding: 4rem 2rem;">
+        <div class="hero-content">
             <div class="features-preview">
                 <div class="feature-item">
                     <div class="feature-icon">🤖</div>
                     <h3>AI Market Analysis</h3>
-                    <p>Advanced algorithms analyze market trends and predict optimal investment opportunities</p>
+                    <p>Advanced algorithms analyze market trends and predict optimal investment opportunities with machine learning precision.</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">📈</div>
                     <h3>Smart Portfolio</h3>
-                    <p>Automated portfolio rebalancing based on your risk tolerance and investment goals</p>
+                    <p>Automated portfolio rebalancing based on your risk tolerance and investment goals, optimized for maximum returns.</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">⚡</div>
                     <h3>Real-time Insights</h3>
-                    <p>Instant notifications about market movements and personalized investment recommendations</p>
+                    <p>Instant notifications about market movements and personalized investment recommendations delivered in real-time.</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">🛡️</div>
                     <h3>Risk Management</h3>
-                    <p>AI-powered risk assessment to protect your investments and maximize returns</p>
+                    <p>AI-powered risk assessment to protect your investments and maximize returns while minimizing exposure.</p>
                 </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Why Choose InvestDive?</h4>
+                <p>Built by financial experts and AI researchers, our platform combines cutting-edge technology with proven investment strategies to give you the edge in today's markets.</p>
             </div>
 
             <div class="timeline">
@@ -506,22 +473,22 @@
                     <div class="timeline-item">
                         <div class="timeline-date">Q1 2025</div>
                         <div class="timeline-title">Beta Launch</div>
-                        <div class="timeline-desc">Early access for waitlist members</div>
+                        <div class="timeline-desc">Early access for waitlist members with core features</div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-date">Q2 2025</div>
                         <div class="timeline-title">Public Release</div>
-                        <div class="timeline-desc">Full platform available to all users</div>
+                        <div class="timeline-desc">Full platform available to all users worldwide</div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-date">Q3 2025</div>
                         <div class="timeline-title">Advanced Features</div>
-                        <div class="timeline-desc">Options trading and crypto integration</div>
+                        <div class="timeline-desc">Options trading, crypto integration, and AI advisors</div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-date">Q4 2025</div>
                         <div class="timeline-title">Global Expansion</div>
-                        <div class="timeline-desc">International markets and currencies</div>
+                        <div class="timeline-desc">International markets, currencies, and regulatory compliance</div>
                     </div>
                 </div>
             </div>
@@ -539,45 +506,6 @@
     </footer>
 
     <script>
-        // Create animated chart lines background
-        function createChartLines() {
-            const container = document.getElementById('chartLines');
-            
-            // Create flowing lines
-            for (let i = 0; i < 15; i++) {
-                const line = document.createElement('div');
-                line.className = 'line';
-                line.style.top = Math.random() * 100 + '%';
-                line.style.width = (Math.random() * 300 + 100) + 'px';
-                line.style.animationDelay = Math.random() * 8 + 's';
-                line.style.animationDuration = (Math.random() * 4 + 6) + 's';
-                container.appendChild(line);
-            }
-            
-            // Create data points
-            for (let i = 0; i < 25; i++) {
-                const point = document.createElement('div');
-                point.className = 'data-point';
-                point.style.left = Math.random() * 100 + '%';
-                point.style.top = Math.random() * 100 + '%';
-                point.style.animationDelay = Math.random() * 6 + 's';
-                container.appendChild(point);
-            }
-            
-            // Create glowing orbs
-            for (let i = 0; i < 5; i++) {
-                const orb = document.createElement('div');
-                orb.className = 'glow-orb';
-                const size = Math.random() * 100 + 50;
-                orb.style.width = size + 'px';
-                orb.style.height = size + 'px';
-                orb.style.left = Math.random() * 100 + '%';
-                orb.style.top = Math.random() * 100 + '%';
-                orb.style.animationDelay = Math.random() * 10 + 's';
-                container.appendChild(orb);
-            }
-        }
-
         // Handle form submission
         document.getElementById('signupForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -591,7 +519,7 @@
             
             setTimeout(() => {
                 submitBtn.textContent = '✓ Added to Waitlist!';
-                submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                submitBtn.style.background = '#059669';
                 
                 // Update waitlist counter
                 const counter = document.getElementById('waitlistCount');
@@ -603,7 +531,7 @@
                     this.reset();
                     submitBtn.textContent = originalText;
                     submitBtn.disabled = false;
-                    submitBtn.style.background = 'linear-gradient(135deg, #10b981, #3b82f6)';
+                    submitBtn.style.background = '#3b82f6';
                 }, 3000);
             }, 2000);
         });
@@ -612,9 +540,11 @@
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');
             if (window.scrollY > 100) {
-                header.style.background = 'rgba(12, 20, 38, 0.95)';
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
             } else {
-                header.style.background = 'rgba(12, 20, 38, 0.8)';
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = 'none';
             }
         });
 
@@ -652,22 +582,32 @@
             updateCounter();
         }
 
-        // Initialize animations
-        createChartLines();
-        
         // Start counter animation when page loads
         window.addEventListener('load', () => {
             setTimeout(animateCounter, 1000);
         });
 
-        // Add parallax effect
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const hero = document.querySelector('.hero');
-            const bgAnimation = document.querySelector('.bg-animation');
-            
-            hero.style.transform = `translateY(${scrolled * 0.3}px)`;
-            bgAnimation.style.transform = `translateY(${scrolled * 0.1}px)`;
+        // Add scroll animations for features
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature items for animation
+        document.querySelectorAll('.feature-item').forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(item);
         });
     </script>
 </body>
